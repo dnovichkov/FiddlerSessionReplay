@@ -2,9 +2,19 @@
 Script for extraction requests from Fiddler's session.
 """
 
+import requests
 import logging
 from zipfile import ZipFile
 import os
+
+
+def get_method(data: str):
+    poss_methods = ['GET', 'OPTIONS', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE']
+    for method in poss_methods:
+        if method in data:
+            return method
+    logging.error('Cannot extract method')
+    return None
 
 
 def extract_session(filename: str) -> str:
