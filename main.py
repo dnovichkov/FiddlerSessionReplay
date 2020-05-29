@@ -53,7 +53,7 @@ def get_headers(data: str) -> dict:
     splitted_lines = data.splitlines()
     result = {}
     try:
-        params_index = splitted_lines.index('AdditionalParams:')
+        params_index = splitted_lines.index('AdditionalParams: ')
         # Empty string means, that request's body is located after this string.
         empty_string_index = splitted_lines.index('', params_index)
     except ValueError as ex:
@@ -93,7 +93,7 @@ def get_json_body(data: str):
 
 
 def get_request(filename: str):
-    with open('filename', 'r') as content_file:
+    with open(filename, 'r') as content_file:
         content = content_file.read()
         url = get_url(content)
         method = get_method(content)
@@ -103,15 +103,20 @@ def get_request(filename: str):
 
 
 def send_request(filename: str):
+    logging.debug(f'Send request from {filename}')
     url, method, headers, body = get_request(filename)
-    if not url or not method or not headers:
+    if not url or not method:
         return
     if body:
         logging.debug(f'Send {method}-request to {url} with data')
-        return requests.request(method, url, headers=headers, data=body)
+        response = requests.request(method, url, headers=headers, data=json.dumps(body)).content
+        logging.debug(response)
+        return
 
     logging.debug(f'Send {method}-request to {url} without data')
-    return requests.request(method, url, headers=headers)
+    response = requests.request(method, url, headers=headers)
+    logging.debug(response)
+    return
 
 
 def extract_session(filename: str) -> str:
@@ -122,9 +127,19 @@ def extract_session(filename: str) -> str:
         return archive_name
 
 
+def send_request_files(folder_name):
+    full_folder_name = folder_name + '/raw/'
+    files = [f for f in os.listdir(full_folder_name) if f.endswith('_c.txt')]
+    logging.debug(files)
+    for file in files:
+        full_filename = full_folder_name + file
+        send_request(full_filename)
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     default_filename = 'FiddlerSession2.saz'
     result = extract_session(default_filename)
     logging.debug(result)
+    send_request_files(result)
