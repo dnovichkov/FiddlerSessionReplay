@@ -20,4 +20,9 @@ Then it's necessary to setup modules: ::
 
 After it you can run the script: ::
 
-    TODO: Add command:)
+    python main.py
+
+Currently this script extracts file "*FiddlerSession2.saz*" to "*FiddlerSession2*"-directory,
+then sends all requests from "*raw/NUMBER_c.txt*".
+Supported HTTP-methods: GET, OPTIONS, POST, PUT, PATCH or DELETE.
+
