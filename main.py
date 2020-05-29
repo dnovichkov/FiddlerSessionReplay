@@ -10,6 +10,11 @@ import json
 
 
 def get_url(data: str):
+    """
+    Extract url from data.
+    :param data: Fiddler-request, 1st line must have format 'METHOD URL VERSION'
+    :return:
+    """
     splitted_lines = data.splitlines()
     if not splitted_lines:
         logging.error('Wrong data format')
@@ -23,6 +28,12 @@ def get_url(data: str):
 
 
 def get_method(data: str):
+
+    """
+    Extract method from data.
+    :param data: Fiddler-request, 1st line must have format 'METHOD URL VERSION'
+    :return:
+    """
     splitted_lines = data.splitlines()
     if not splitted_lines:
         logging.error('Wrong data format')
@@ -74,6 +85,11 @@ def get_headers(data: str) -> dict:
 
 
 def get_json_body(data: str):
+    """
+    Extract JSON-body from session
+    :param data:
+    :return:
+    """
     splitted_lines = data.splitlines()
     try:
         empty_string_index = splitted_lines.index('')
@@ -93,6 +109,11 @@ def get_json_body(data: str):
 
 
 def get_request(filename: str):
+    """
+    Return necessary data from file for sending request
+    :param filename:
+    :return:
+    """
     with open(filename, 'r') as content_file:
         content = content_file.read()
         url = get_url(content)
@@ -103,6 +124,11 @@ def get_request(filename: str):
 
 
 def send_request(filename: str):
+    """
+    Send request from file
+    :param filename:
+    :return:
+    """
     logging.debug(f'Send request from {filename}')
     url, method, headers, body = get_request(filename)
     if not url or not method:
@@ -120,6 +146,11 @@ def send_request(filename: str):
 
 
 def extract_session(filename: str) -> str:
+    """
+    Unpack Fiddler-file to folder
+    :param filename:
+    :return:
+    """
     with ZipFile(filename, 'r') as zip_archive:
         archive_name, _ = os.path.splitext(filename)
         logging.debug(f'Unpacking session {filename} to folder {archive_name}')
@@ -128,6 +159,11 @@ def extract_session(filename: str) -> str:
 
 
 def send_request_files(folder_name):
+    """
+    Send files from unpacked Fiddler file
+    :param folder_name:
+    :return:
+    """
     full_folder_name = folder_name + '/raw/'
     files = [f for f in os.listdir(full_folder_name) if f.endswith('_c.txt')]
     logging.debug(files)
