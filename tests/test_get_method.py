@@ -2,10 +2,10 @@ from main import get_method
 
 
 def test_get_method():
-    method = get_method('GET smth')
+    method = get_method('GET url POST')
     assert method == 'GET'
 
-    method = get_method('GET smth and POST')
+    method = get_method('GET url ver')
     assert method == 'GET'
 
     method = get_method('POST smth else')

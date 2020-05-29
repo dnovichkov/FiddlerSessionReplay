@@ -9,11 +9,37 @@ import os
 import json
 
 
+def get_url(data: str):
+    splitted_lines = data.splitlines()
+    if not splitted_lines:
+        logging.error('Wrong data format')
+        return None
+    first_line = splitted_lines[0]
+    strings = first_line.split(' ')
+    if len(strings) != 3:
+        logging.error(f'Wrong 1st string: {first_line}')
+        return None
+    return strings[1]
+
+
 def get_method(data: str):
+    splitted_lines = data.splitlines()
+    if not splitted_lines:
+        logging.error('Wrong data format')
+        return None
+
+    first_line = splitted_lines[0]
+    strings = first_line.split(' ')
+    if len(strings) != 3:
+        logging.error(f'Wrong 1st string: {first_line}')
+        return None
+
+    method_string = strings[0]
+
     poss_methods = ['GET', 'OPTIONS', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE']
-    for method in poss_methods:
-        if method in data:
-            return method
+    if method_string in poss_methods:
+        return method_string
+
     logging.error('Cannot extract method')
     return None
 
@@ -64,6 +90,28 @@ def get_json_body(data: str):
         except Exception as ex:
             logging.error(ex)
             return None
+
+
+def get_request(filename: str):
+    with open('filename', 'r') as content_file:
+        content = content_file.read()
+        url = get_url(content)
+        method = get_method(content)
+        headers = get_headers(content)
+        body = get_json_body(content)
+        return url, method, headers, body
+
+
+def send_request(filename: str):
+    url, method, headers, body = get_request(filename)
+    if not url or not method or not headers:
+        return
+    if body:
+        logging.debug(f'Send {method}-request to {url} with data')
+        return requests.request(method, url, headers=headers, data=body)
+
+    logging.debug(f'Send {method}-request to {url} without data')
+    return requests.request(method, url, headers=headers)
 
 
 def extract_session(filename: str) -> str:
