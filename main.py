@@ -6,6 +6,7 @@ import requests
 import logging
 from zipfile import ZipFile
 import os
+import json
 
 
 def get_method(data: str):
@@ -44,6 +45,25 @@ def get_headers(data: str) -> dict:
             logging.error(ex)
 
     return result
+
+
+def get_json_body(data: str):
+    splitted_lines = data.splitlines()
+    try:
+        empty_string_index = splitted_lines.index('')
+    except ValueError as ex:
+        logging.error(ex)
+        return None
+    for i in range(empty_string_index + 1, len(splitted_lines)):
+        line = splitted_lines[i]
+        if not line:
+            continue
+        try:
+            res = json.loads(line)
+            return res
+        except Exception as ex:
+            logging.error(ex)
+            return None
 
 
 def extract_session(filename: str) -> str:
