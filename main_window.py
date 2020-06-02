@@ -1,3 +1,4 @@
+import time
 import logging
 
 from PyQt5 import QtWidgets, QtGui
@@ -52,6 +53,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 logging.debug(url)
 
                 send_data(body, headers, method, url)
+                # TODO: move timeout to settings.
+                time.sleep(1)
                 progress_callback.emit(i)
         except Exception as ex:
             logging.error(ex)
