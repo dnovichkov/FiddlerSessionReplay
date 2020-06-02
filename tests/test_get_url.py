@@ -1,4 +1,4 @@
-from main import get_url
+from fiddler_session_replay.data_extracters import get_url
 
 
 def test_get_url():

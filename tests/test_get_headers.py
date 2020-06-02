@@ -1,4 +1,4 @@
-from main import get_headers
+from fiddler_session_replay.data_extracters import get_headers
 
 
 def test_get_headers():

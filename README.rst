@@ -22,7 +22,13 @@ After it you can run the script: ::
 
     python main.py
 
-Currently this script extracts file "*FiddlerSession2.saz*" to "*FiddlerSession2*"-directory,
+
+If you want to change design, you should use session_replay.ui file. It can be opened by QtDesigner.
+After changing and saving this file you should run ::
+
+    pyuic5 session_replay.ui -o session_replay.py
+
+Currently this script extracts requestr from selected file to directory with the same name,
 then sends all requests from "*raw/NUMBER_c.txt*".
 Supported HTTP-methods: GET, OPTIONS, POST, PUT, PATCH or DELETE.
 

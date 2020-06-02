@@ -1,4 +1,4 @@
-from main import get_json_body
+from fiddler_session_replay.data_extracters import get_json_body
 
 
 def test_get_json_body():

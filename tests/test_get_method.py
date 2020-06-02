@@ -1,4 +1,4 @@
-from main import get_method
+from fiddler_session_replay.data_extracters import get_method
 
 
 def test_get_method():
