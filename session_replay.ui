@@ -39,7 +39,11 @@
        </layout>
       </item>
       <item>
-       <widget class="QTextEdit" name="requests_edit"/>
+       <widget class="QTableWidget" name="requests_table_widget">
+        <property name="columnCount">
+         <number>0</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

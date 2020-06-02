@@ -15,6 +15,10 @@ def send_request(filename: str):
     """
     logging.debug(f'Send request from {filename}')
     url, method, headers, body = get_request(filename)
+    return send_data(body, headers, method, url)
+
+
+def send_data(body, headers, method, url):
     if not url or not method:
         return
     if body:
@@ -22,11 +26,17 @@ def send_request(filename: str):
         response = requests.request(method, url, headers=headers, data=json.dumps(body)).content
         logging.debug(response)
         return
-
     logging.debug(f'Send {method}-request to {url} without data')
     response = requests.request(method, url, headers=headers)
     logging.debug(response)
     return
+
+
+def get_full_requests_filenames(folder_name):
+    full_folder_name = folder_name + '/raw/'
+    files = [full_folder_name + f for f in os.listdir(full_folder_name) if f.endswith('_c.txt')]
+    logging.debug(files)
+    return files
 
 
 def send_request_files(folder_name):
@@ -35,9 +45,6 @@ def send_request_files(folder_name):
     :param folder_name:
     :return:
     """
-    full_folder_name = folder_name + '/raw/'
-    files = [f for f in os.listdir(full_folder_name) if f.endswith('_c.txt')]
-    logging.debug(files)
+    files = get_full_requests_filenames(folder_name)
     for file in files:
-        full_filename = full_folder_name + file
-        send_request(full_filename)
+        send_request(file)
